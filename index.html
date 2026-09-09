@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Город Мастеров — Части речи</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --turquoise: #2EC4B6;
+    --turquoise-dark: #1A9E92;
+    --coral: #FF6B6B;
+    --coral-dark: #E55555;
+    --mint: #A8E6CF;
+    --mint-dark: #7FD4B0;
+    --sand: #F4E4BC;
+    --gold: #FFD93D;
+    --blue: #4D96FF;
+    --gray: #8E9AAF;
+    --green: #6BCB77;
+    --purple: #9D4EDD;
+    --text: #2D3142;
+  }
+  
+  html, body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #E8F5F0 0%, #F0F7F4 50%, #FFF5E1 100%);
+    min-height: 100vh;
+    color: var(--text);
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* ===== ОБЩИЕ ЭКРАНЫ ===== */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+  }
+  
+  .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* ===== СТАРТОВЫЙ ЭКРАН ===== */
+  .start-screen { text-align: center; padding: 40px 20px; }
+  
+  .logo {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--turquoise) 0%, var(--coral) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+    text-align: center;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--turquoise-dark);
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .story-box, .rules-box {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto 20px;
+    text-align: left;
+    box-shadow: 0 10px 40px rgba(46, 196, 182, 0.15);
+  }
+  
+  .story-box { border: 3px solid var(--mint); }
+  .rules-box { border: 3px solid var(--coral); }
+  
+  .story-box h3 { color: var(--coral-dark); margin-bottom: 15px; font-size: 1.3rem; text-align: center; }
+  .rules-box h3 { color: var(--turquoise-dark); margin-bottom: 15px; font-size: 1.3rem; text-align: center; }
+  
+  .story-box p { line-height: 1.7; font-size: 1.05rem; }
+  
+  .rules-box ul { list-style: none; padding: 0; }
+  .rules-box li {
+    padding: 8px 0 8px 32px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .rules-box li::before {
+    content: "🧱";
+    position: absolute;
+    left: 0;
+    top: 8px;
+  }
+  
+  /* ===== КНОПКИ ===== */
+  .btn {
+    background: linear-gradient(135deg, var(--turquoise) 0%, var(--turquoise-dark) 100%);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(46, 196, 182, 0.4);
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    margin: 10px auto;
+    display: inline-block;
+    min-width: 200px;
+  }
+  
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(46, 196, 182, 0.5); }
+  .btn:active { transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  
+  .btn-coral {
+    background: linear-gradient(135deg, var(--coral) 0%, var(--coral-dark) 100%);
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+  }
+  .btn-coral:hover { box-shadow: 0 12px 25px rgba(255, 107, 107, 0.5); }
+  
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold) 0%, #E8A838 100%);
+    box-shadow: 0 8px 20px rgba(255, 217, 61, 0.4);
+    color: var(--text);
+  }
+  
+  /* ===== ИГРОВОЙ ЭКРАН ===== */
+  .game-screen { padding: 15px; justify-content: flex-start; }
+  
+  .hud {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 900px;
+  }
+  
+  .hud-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  
+  .hud-icon { font-size: 1.2rem; }
+  .hud-value { color: var(--turquoise-dark); font-size: 1.05rem; }
+  
+  .hearts { display: flex; gap: 2px; }
+  .heart { font-size: 1.2rem; transition: all 0.3s; }
+  .heart.lost { opacity: 0.2; transform: scale(0.8); }
+  
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #E8F5F0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--turquoise), var(--mint));
+    transition: width 0.5s ease;
+    border-radius: 10px;
+  }
+  
+  .round-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--turquoise-dark);
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 900px;
+  }
+  
+  .word-card {
+    background: linear-gradient(135deg, #FFF5E1 0%, #FFE8CC 100%);
+    border: 3px solid var(--gold);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 6px 20px rgba(255, 217, 61, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .word-card.animate { animation: cardAppear 0.5s ease; }
+  
+  @keyframes cardAppear {
+    from { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+    to { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  
+  .word-text {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+  
+  .word-hint {
+    font-size: 0.95rem;
+    color: var(--turquoise-dark);
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  
+  .buildings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .building {
+    background: white;
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .building:hover:not(.frozen):not(.locked) {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  
+  .building.locked { cursor: not-allowed; opacity: 0.7; }
+  
+  .building.correct { animation: correctPulse 0.6s ease; border-color: var(--green); }
+  .building.wrong { animation: wrongShake 0.5s ease; border-color: var(--coral); }
+  
+  .building.frozen {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(0.6);
+  }
+  
+  .building.frozen::after {
+    content: "❄️";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    z-index: 10;
+  }
+  
+  @keyframes correctPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  
+  @keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  
+  .building-icon { font-size: 1.8rem; margin-bottom: 4px; }
+  .building-name { font-weight: 700; font-size: 0.82rem; color: var(--text); margin-bottom: 4px; line-height: 1.2; }
+  .building-question { font-size: 0.72rem; color: #666; font-style: italic; line-height: 1.2; }
+  
+  .building-level {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-top: 6px;
+  }
+  
+  .building-block {
+    width: 100%;
+    height: 6px;
+    background: #E8F5F0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .building-block-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 3px;
+  }
+  
+  /* Цвета зданий */
+  .b-noun { background: linear-gradient(135deg, #E0F7F5 0%, #B2E8E2 100%); }
+  .b-noun .building-block-fill { background: var(--turquoise); }
+  
+  .b-adj { background: linear-gradient(135deg, #FFE5E5 0%, #FFC2C2 100%); }
+  .b-adj .building-block-fill { background: var(--coral); }
+  
+  .b-verb { background: linear-gradient(135deg, #FFF5DC 0%, #FFE8A8 100%); }
+  .b-verb .building-block-fill { background: #E8A838; }
+  
+  .b-pron { background: linear-gradient(135deg, #E8F8EF 0%, #C2EED8 100%); }
+  .b-pron .building-block-fill { background: var(--mint-dark); }
+  
+  .b-num { background: linear-gradient(135deg, #FFF8DC 0%, #FFE98A 100%); }
+  .b-num .building-block-fill { background: var(--gold); }
+  
+  .b-adv { background: linear-gradient(135deg, #E0ECFF 0%, #B8D4FF 100%); }
+  .b-adv .building-block-fill { background: var(--blue); }
+  
+  .b-prep { background: linear-gradient(135deg, #EEF0F5 0%, #D0D6E2 100%); }
+  .b-prep .building-block-fill { background: var(--gray); }
+  
+  .b-conj { background: linear-gradient(135deg, #E5F5E7 0%, #B8E0BD 100%); }
+  .b-conj .building-block-fill { background: var(--green); }
+  
+  .b-part { background: linear-gradient(135deg, #F0E5F8 0%, #D8B8EC 100%); }
+  .b-part .building-block-fill { background: var(--purple); }
+  
+  /* ===== МОДАЛКА ===== */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  
+  .modal-overlay.active { display: flex; }
+  
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease;
+    text-align: center;
+  }
+  
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .modal h2 { color: var(--turquoise-dark); margin-bottom: 15px; font-size: 1.4rem; }
+  .modal p { line-height: 1.6; margin-bottom: 15px; color: var(--text); }
+  
+  /* ===== ОБРАТНАЯ СВЯЗЬ ===== */
+  .feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    z-index: 500;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: none;
+    text-align: center;
+    max-width: 90%;
+  }
+  
+  .feedback.show { display: block; animation: feedbackPop 0.4s ease; }
+  .feedback.correct { color: var(--turquoise-dark); border: 3px solid var(--turquoise); }
+  .feedback.wrong { color: var(--coral-dark); border: 3px solid var(--coral); }
+  
+  @keyframes feedbackPop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  
+  /* ===== БОНУСНЫЙ ЭКРАН ===== */
+  .bonus-screen { padding: 30px 20px; }
+  
+  .bonus-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(46, 196, 182, 0.2);
+    border: 3px solid var(--gold);
+    text-align: center;
+  }
+  
+  .bonus-card h2 { color: var(--coral-dark); margin-bottom: 20px; font-size: 1.5rem; }
+  
+  .bonus-sentence {
+    background: linear-gradient(135deg, #FFF8DC 0%, #FFE98A 100%);
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-style: italic;
+    border: 2px solid var(--gold);
+  }
+  
+  .bonus-task {
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  
+  .bonus-input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid var(--mint);
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: center;
+  }
+  
+  .bonus-input:focus { border-color: var(--turquoise); }
+  
+  .bonus-hint { font-size: 0.85rem; color: var(--gray); margin-bottom: 15px; }
+  
+  /* ===== ЭКРАН ОКОНЧАНИЯ РАУНДА ===== */
+  .round-end-screen { padding: 30px 20px; }
+  
+  .round-end-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(46, 196, 182, 0.2);
+    border: 3px solid var(--turquoise);
+  }
+  
+  .round-end-card h2 { color: var(--turquoise-dark); margin-bottom: 20px; font-size: 1.7rem; }
+  
+  .round-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .stat { text-align: center; }
+  .stat-value { font-size: 2rem; font-weight: 800; color: var(--coral-dark); }
+  .stat-label { font-size: 0.9rem; color: var(--gray); font-weight: 600; }
+  
+  /* ===== ФИНАЛЬНЫЙ ЭКРАН ===== */
+  .final-screen { padding: 30px 20px; text-align: center; }
+  
+  .final-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 30px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 15px 50px rgba(46, 196, 182, 0.25);
+    border: 4px solid var(--gold);
+    text-align: center;
+  }
+  
+  .final-icon { font-size: 4rem; margin-bottom: 15px; }
+  
+  .final-title {
+    font-size: 1.9rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--turquoise) 0%, var(--coral) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+  }
+  
+  .final-rank { font-size: 1.4rem; font-weight: 700; color: var(--coral-dark); margin: 15px 0; }
+  
+  .final-score { font-size: 1.1rem; color: var(--text); margin-bottom: 20px; line-height: 1.6; }
+  
+  .city-view {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 20px 0;
+    padding: 15px;
+    background: linear-gradient(135deg, #E8F5F0 0%, #FFF5E1 100%);
+    border-radius: 12px;
+  }
+  
+  .city-building {
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: white;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .city-building-icon { font-size: 1.4rem; margin-bottom: 4px; }
+  
+  /* ===== АДАПТИВНОСТЬ ===== */
+  @media (max-width: 700px) {
+    .logo { font-size: 2.3rem; }
+    .subtitle { font-size: 1rem; }
+    .story-box, .rules-box, .bonus-card, .round-end-card, .final-card { padding: 20px; }
+    .buildings-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .building { padding: 10px 6px; min-height: 115px; }
+    .building-icon { font-size: 1.4rem; }
+    .building-name { font-size: 0.72rem; }
+    .building-question { font-size: 0.65rem; }
+    .word-text { font-size: 1.8rem; }
+    .hud { padding: 10px 12px; }
+    .hud-item { font-size: 0.85rem; }
+    .round-title { font-size: 1.05rem; }
+    .final-title { font-size: 1.5rem; }
+    .final-rank { font-size: 1.15rem; }
+    .btn { padding: 14px 30px; font-size: 1rem; min-width: 180px; }
+  }
+  
+  @media (max-width: 420px) {
+    .buildings-grid { grid-template-columns: repeat(2, 1fr); }
+    .building { min-height: 100px; }
+    .city-view { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- СТАРТОВЫЙ ЭКРАН -->
+<div id="start-screen" class="screen start-screen active">
+  <div class="logo">🏗️ Город Мастеров</div>
+  <div class="subtitle">Приключения в мире частей речи</div>
+  
+  <div class="story-box">
+    <h3>📜 Сюжет</h3>
+    <p>Ты — главный архитектор нового города <b>Словоград</b>. Город стоит на берегу реки Грамматики, но пока здесь пустое поле. Чтобы построить город, тебе нужны <b>строительные материалы</b> — слова. Но слова перепутались после наводнения и лежат в общей куче. Каждый материал подходит только для определённого здания. Если положить не тот материал — постройка рухнет!</p>
+  </div>
+  
+  <div class="rules-box">
+    <h3>📋 Правила</h3>
+    <ul>
+      <li>На экране появляется <b>слово-материал</b></li>
+      <li>Внизу — 9 стройплощадок (по одной на каждую часть речи)</li>
+      <li>Кликни на нужную стройплощадку</li>
+      <li>Верно — <b>+10 кирпичей</b> 🧱 и здание растёт</li>
+      <li>Ошибка — теряешь <b>1 жизнь</b> ❤️</li>
+      <li>Игра состоит из <b>5 раундов</b> + бонусные задания</li>
+      <li>Построй весь город, чтобы в нём закипела жизнь!</li>
+    </ul>
+  </div>
+  
+  <button class="btn" id="start-btn">🚀 Начать строительство!</button>
+</div>
+
+<!-- ИГРОВОЙ ЭКРАН -->
+<div id="game-screen" class="screen game-screen">
+  <div class="hud">
+    <div class="hud-item">
+      <span class="hud-icon">🏗️</span>
+      <span>Раунд <span id="round-num" class="hud-value">1</span>/5</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-icon">🧱</span>
+      <span id="score" class="hud-value">0</span>
+    </div>
+    <div class="hud-item">
+      <div class="hearts" id="hearts"></div>
+    </div>
+    <div class="hud-item" style="width:100%;">
+      <div class="progress-bar" style="width:100%;">
+        <div class="progress-fill" id="progress" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="round-title" id="round-title">🌟 Раунд 1: «Фундамент»</div>
+  
+  <div class="word-card" id="word-card">
+    <div class="word-text" id="word-text">солнце</div>
+    <div class="word-hint" id="word-hint">💭 Выбери стройплощадку!</div>
+  </div>
+  
+  <div class="buildings-grid" id="buildings-grid"></div>
+</div>
+
+<!-- БОНУСНЫЙ ЭКРАН -->
+<div id="bonus-screen" class="screen bonus-screen">
+  <div class="bonus-card">
+    <h2>⭐ Бонусное задание!</h2>
+    <div class="bonus-sentence" id="bonus-sentence"></div>
+    <div class="bonus-task" id="bonus-task"></div>
+    <input type="text" class="bonus-input" id="bonus-input" placeholder="Введи слова через запятую">
+    <div class="bonus-hint">💡 Подсказка: раздели слова запятыми или пробелами</div>
+    <button class="btn btn-gold" id="bonus-check-btn">✅ Проверить</button>
+  </div>
+</div>
+
+<!-- ЭКРАН ОКОНЧАНИЯ РАУНДА -->
+<div id="round-end-screen" class="screen round-end-screen">
+  <div class="round-end-card">
+    <h2 id="round-end-title">🎉 Раунд завершён!</h2>
+    <div class="round-stats">
+      <div class="stat">
+        <div class="stat-value" id="round-correct">0</div>
+        <div class="stat-label">Верно</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="round-wrong">0</div>
+        <div class="stat-label">Ошибок</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="round-bonus">0</div>
+        <div class="stat-label">Бонус</div>
+      </div>
+    </div>
+    <button class="btn" id="next-round-btn">▶️ Дальше</button>
+  </div>
+</div>
+
+<!-- ФИНАЛЬНЫЙ ЭКРАН -->
+<div id="final-screen" class="screen final-screen">
+  <div class="final-card">
+    <div class="final-icon" id="final-icon">🏆</div>
+    <div class="final-title" id="final-title">Словоград построен!</div>
+    <div class="final-rank" id="final-rank">Великий Архитектор</div>
+    <div class="final-score" id="final-score"></div>
+    <div class="city-view" id="city-view"></div>
+    <button class="btn btn-coral" id="restart-btn">🔄 Сыграть ещё раз</button>
+  </div>
+</div>
+
+<!-- МОДАЛКА ПРАВИЛА -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2 id="modal-title">📖 Правило</h2>
+    <p id="modal-text"></p>
+    <button class="btn" id="modal-close-btn">Понятно!</button>
+  </div>
+</div>
+
+<!-- ОБРАТНАЯ СВЯЗЬ -->
+<div class="feedback" id="feedback"></div>
+
+<script>
+// ===== ДАННЫЕ ИГРЫ =====
+const PARTS_OF_SPEECH = [
+  { id: 'noun', name: 'Существительное', building: 'Дом Жителей', icon: '🏠', question: 'кто? что?', class: 'b-noun',
+    rule: 'Существительное — обозначает предмет, отвечает на вопросы кто? что? Изменяется по падежам, числам, родам.' },
+  { id: 'adj', name: 'Прилагательное', building: 'Красочная Башня', icon: '🏰', question: 'какой? какая? какое?', class: 'b-adj',
+    rule: 'Прилагательное — обозначает признак предмета, отвечает на вопросы какой? какая? какое? какие? Изменяется по родам, числам, падежам.' },
+  { id: 'verb', name: 'Глагол', building: 'Мастерская Дел', icon: '🔨', question: 'что делать? что сделать?', class: 'b-verb',
+    rule: 'Глагол — обозначает действие предмета, отвечает на вопросы что делать? что сделать? Изменяется по временам, лицам, числам.' },
+  { id: 'pron', name: 'Местоимение', building: 'Дом-Невидимка', icon: '👻', question: 'указывает, не называет', class: 'b-pron',
+    rule: 'Местоимение — указывает на предмет, признак или количество, но не называет их.' },
+  { id: 'num', name: 'Числительное', building: 'Счётная Палата', icon: '🔢', question: 'сколько? какой по счёту?', class: 'b-num',
+    rule: 'Числительное — обозначает количество или порядок, отвечает на вопросы сколько? какой по счёту?' },
+  { id: 'adv', name: 'Наречие', building: 'Маяк Обстоятельств', icon: '🗼', question: 'как? где? когда? куда?', class: 'b-adv',
+    rule: 'Наречие — обозначает признак действия, отвечает на вопросы как? где? когда? куда? Не изменяется.' },
+  { id: 'prep', name: 'Предлог', building: 'Мост Связей', icon: '🌉', question: 'служебная', class: 'b-prep',
+    rule: 'Предлог — служебная часть речи, связывает слова в предложении. Не изменяется, не является членом предложения.' },
+  { id: 'conj', name: 'Союз', building: 'Ворота Дружбы', icon: '🚪', question: 'соединяет', class: 'b-conj',
+    rule: 'Союз — служебная часть речи, соединяет однородные члены или части сложного предложения.' },
+  { id: 'part', name: 'Частица', building: 'Фонарик Смысла', icon: '💡', question: 'вносит оттенок', class: 'b-part',
+    rule: 'Частица — служебная часть речи, вносит дополнительные оттенки значения (отрицание, вопрос, усиление).' }
+];
+
+const ROUNDS = [
+  {
+    title: '🌟 Раунд 1: «Фундамент»',
+    words: [
+      { word: 'солнце', answer: 'noun', hint: 'Обозначает предмет' },
+      { word: 'бежать', answer: 'verb', hint: 'Обозначает действие' },
+      { word: 'красивый', answer: 'adj', hint: 'Обозначает признак' },
+      { word: 'он', answer: 'pron', hint: 'Указывает на лицо' },
+      { word: 'пять', answer: 'num', hint: 'Обозначает количество' },
+      { word: 'быстро', answer: 'adv', hint: 'Обозначает образ действия' },
+      { word: 'под', answer: 'prep', hint: 'Служебная часть речи' },
+      { word: 'и', answer: 'conj', hint: 'Соединяет слова' }
+    ]
+  },
+  {
+    title: '🌟 Раунд 2: «Стены»',
+    words: [
+      { word: 'радость', answer: 'noun', hint: 'Обозначает чувство' },
+      { word: 'сиять', answer: 'verb', hint: 'Обозначает действие' },
+      { word: 'весенний', answer: 'adj', hint: 'Обозначает признак' },
+      { word: 'мы', answer: 'pron', hint: 'Указывает на группу лиц' },
+      { word: 'третий', answer: 'num', hint: 'Обозначает порядок' },
+      { word: 'вчера', answer: 'adv', hint: 'Обозначает время' },
+      { word: 'из-за', answer: 'prep', hint: 'Служебная часть речи' },
+      { word: 'но', answer: 'conj', hint: 'Противопоставляет' }
+    ]
+  },
+  {
+    title: '🌟 Раунд 3: «Крыша»',
+    words: [
+      { word: 'бег', answer: 'noun', hint: 'Не действие, а название!' },
+      { word: 'зелёный', answer: 'adj', hint: 'Признак предмета' },
+      { word: 'построить', answer: 'verb', hint: 'Что сделать?' },
+      { word: 'себя', answer: 'pron', hint: 'Указывает на себя' },
+      { word: 'семеро', answer: 'num', hint: 'Собирательное числительное' },
+      { word: 'вверху', answer: 'adv', hint: 'Где? — указывает на место' },
+      { word: 'над', answer: 'prep', hint: 'Служебная часть речи' },
+      { word: 'чтобы', answer: 'conj', hint: 'Соединяет части предложения' }
+    ]
+  },
+  {
+    title: '🌟 Раунд 4: «Окна и двери»',
+    words: [
+      { word: 'печь', answer: 'noun', hint: 'Что? — предмет (русская печь)' },
+      { word: 'тихо', answer: 'adv', hint: 'Как? — образ действия' },
+      { word: 'мой', answer: 'pron', hint: 'Указывает на принадлежность' },
+      { word: 'одиннадцать', answer: 'num', hint: 'Сколько? — количество' },
+      { word: 'не', answer: 'part', hint: 'Отрицание' },
+      { word: 'же', answer: 'part', hint: 'Усиливает значение' },
+      { word: 'стекло', answer: 'noun', hint: 'Что? — материал' },
+      { word: 'а', answer: 'conj', hint: 'Противопоставляет' }
+    ]
+  },
+  {
+    title: '🌟 Раунд 5: «Финальная стройка»',
+    words: [
+      { word: 'мороз', answer: 'noun', hint: 'Что? — явление природы' },
+      { word: 'искристый', answer: 'adj', hint: 'Какой? — признак снега' },
+      { word: 'замёрзнуть', answer: 'verb', hint: 'Что сделать? — действие' },
+      { word: 'тот', answer: 'pron', hint: 'Указывает на предмет' },
+      { word: 'двое', answer: 'num', hint: 'Сколько? — собирательное' },
+      { word: 'далеко', answer: 'adv', hint: 'Где? Куда? — расстояние' },
+      { word: 'по', answer: 'prep', hint: 'Служебная часть речи' },
+      { word: 'ли', answer: 'part', hint: 'Вносит оттенок вопроса' }
+    ]
+  }
+];
+
+// 5 бонусных заданий — по одному на каждый раунд
+const BONUS_TASKS = [
+  {
+    sentence: 'Тихий лес спит под зимним небом.',
+    task: 'Выпиши все имена прилагательные:',
+    answers: ['тихий', 'зимним']
+  },
+  {
+    sentence: 'Он быстро пробежал три круга и остановился.',
+    task: 'Выпиши все глаголы:',
+    answers: ['пробежал', 'остановился']
+  },
+  {
+    sentence: 'Неужели мы не смогли бы построить этот мост?',
+    task: 'Выпиши все частицы:',
+    answers: ['неужели', 'не', 'бы']
+  },
+  {
+    sentence: 'Пять птиц сидели на ветке и грелись на солнце.',
+    task: 'Выпиши числительное и союз:',
+    answers: ['пять', 'и']
+  },
+  {
+    sentence: 'Ярко светит солнце, и мы быстро идём вперёд.',
+    task: 'Выпиши все наречия:',
+    answers: ['ярко', 'быстро', 'вперёд']
+  }
+];
+
+// ===== СОСТОЯНИЕ ИГРЫ =====
+let state = {
+  currentRound: 0,
+  currentWordIndex: 0,
+  score: 0,
+  lives: 5,
+  roundCorrect: 0,
+  roundWrong: 0,
+  roundErrorsByBuilding: {},
+  selectedWord: null,
+  totalWords: 0,
+  completedWords: 0,
+  buildingsProgress: {},
+  isLocked: false // блокировка во время анимации
+};
+
+// ===== ИНИЦИАЛИЗАЦИЯ КНОПОК =====
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('restart-btn').addEventListener('click', restartGame);
+document.getElementById('bonus-check-btn').addEventListener('click', checkBonus);
+document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+document.getElementById('bonus-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') checkBonus();
+});
+
+// ===== СТАРТ ИГРЫ =====
+function startGame() {
+  state = {
+    currentRound: 0,
+    currentWordIndex: 0,
+    score: 0,
+    lives: 5,
+    roundCorrect: 0,
+    roundWrong: 0,
+    roundErrorsByBuilding: {},
+    selectedWord: null,
+    totalWords: ROUNDS.reduce((sum, r) => sum + r.words.length, 0),
+    completedWords: 0,
+    buildingsProgress: {},
+    isLocked: false
+  };
+  
+  PARTS_OF_SPEECH.forEach(p => state.buildingsProgress[p.id] = 0);
+  
+  switchScreen('game-screen');
+  renderBuildings();
+  updateHUD();
+  loadWord();
+}
+
+function restartGame() {
+  switchScreen('start-screen');
+}
+
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== РЕНДЕРИНГ =====
+function renderBuildings() {
+  const grid = document.getElementById('buildings-grid');
+  grid.innerHTML = '';
+  
+  PARTS_OF_SPEECH.forEach(p => {
+    const b = document.createElement('div');
+    b.className = `building ${p.class}`;
+    b.dataset.id = p.id;
+    b.addEventListener('click', () => selectBuilding(p.id));
+    
+    const progress = state.buildingsProgress[p.id] || 0;
+    
+    b.innerHTML = `
+      <div class="building-icon">${p.icon}</div>
+      <div class="building-name">${p.building}</div>
+      <div class="building-question">${p.question}</div>
+      <div class="building-level">
+        <div class="building-block" style="flex:1;">
+          <div class="building-block-fill" style="width:${progress}%;"></div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(b);
+  });
+}
+
+function loadWord() {
+  const round = ROUNDS[state.currentRound];
+  if (state.currentWordIndex >= round.words.length) {
+    endRound();
+    return;
+  }
+  
+  const wordData = round.words[state.currentWordIndex];
+  document.getElementById('word-text').textContent = wordData.word;
+  document.getElementById('word-hint').textContent = `💭 ${wordData.hint}`;
+  
+  // Перезапуск анимации
+  const card = document.getElementById('word-card');
+  card.classList.remove('animate');
+  void card.offsetWidth; // принудительный reflow
+  card.classList.add('animate');
+  
+  state.selectedWord = wordData;
+  state.isLocked = false;
+  
+  // Снимаем блокировку со зданий
+  document.querySelectorAll('.building').forEach(b => b.classList.remove('locked'));
+}
+
+function updateHUD() {
+  document.getElementById('round-num').textContent = state.currentRound + 1;
+  document.getElementById('score').textContent = state.score;
+  document.getElementById('round-title').textContent = ROUNDS[state.currentRound].title;
+  
+  const hearts = document.getElementById('hearts');
+  hearts.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart' + (i >= state.lives ? ' lost' : '');
+    h.textContent = '❤️';
+    hearts.appendChild(h);
+  }
+  
+  const progress = (state.completedWords / state.totalWords) * 100;
+  document.getElementById('progress').style.width = progress + '%';
+}
+
+// ===== ЛОГИКА ИГРЫ =====
+function selectBuilding(buildingId) {
+  if (state.isLocked || !state.selectedWord) return;
+  
+  const buildingEl = document.querySelector(`.building[data-id="${buildingId}"]`);
+  if (buildingEl.classList.contains('frozen')) return;
+  
+  // Блокируем повторные клики
+  state.isLocked = true;
+  document.querySelectorAll('.building').forEach(b => b.classList.add('locked'));
+  
+  if (buildingId === state.selectedWord.answer) {
+    // ВЕРНО
+    state.score += 10;
+    state.roundCorrect++;
+    state.completedWords++;
+    state.buildingsProgress[buildingId] = Math.min(100, (state.buildingsProgress[buildingId] || 0) + 15);
+    
+    buildingEl.classList.add('correct');
+    showFeedback('✅ Верно! +10 кирпичей', 'correct');
+    
+    setTimeout(() => {
+      buildingEl.classList.remove('correct');
+      renderBuildings();
+      state.currentWordIndex++;
+      updateHUD();
+      loadWord();
+    }, 1000);
+    
+  } else {
+    // ОШИБКА
+    state.lives--;
+    state.roundWrong++;
+    
+    if (!state.roundErrorsByBuilding[buildingId]) state.roundErrorsByBuilding[buildingId] = 0;
+    state.roundErrorsByBuilding[buildingId]++;
+    
+    buildingEl.classList.add('wrong');
+    
+    const correctBuilding = PARTS_OF_SPEECH.find(p => p.id === state.selectedWord.answer);
+    showFeedback(`❌ Это ${correctBuilding.name.toLowerCase()}`, 'wrong');
+    
+    // Заморозка при 3 ошибках на одной площадке
+    if (state.roundErrorsByBuilding[buildingId] >= 3) {
+      setTimeout(() => {
+        buildingEl.classList.add('frozen');
+        showRuleModal(PARTS_OF_SPEECH.find(p => p.id === buildingId));
+      }, 800);
+    }
+    
+    updateHUD();
+    
+    if (state.lives <= 0) {
+      setTimeout(() => gameOver(), 1500);
+      return;
+    }
+    
+    setTimeout(() => {
+      buildingEl.classList.remove('wrong');
+      state.currentWordIndex++;
+      loadWord();
+    }, 1800); // больше времени, чтобы ученик прочитал подсказку
+  }
+}
+
+function showFeedback(text, type) {
+  const fb = document.getElementById('feedback');
+  fb.textContent = text;
+  fb.className = `feedback show ${type}`;
+  setTimeout(() => fb.classList.remove('show'), 1500);
+}
+
+function showRuleModal(part) {
+  document.getElementById('modal-title').textContent = `📖 ${part.name}`;
+  document.getElementById('modal-text').textContent = part.rule;
+  document.getElementById('modal-overlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+
+// ===== КОНЕЦ РАУНДА =====
+function endRound() {
+  const bonus = state.roundWrong === 0 ? 20 : 0;
+  state.score += bonus;
+  
+  document.getElementById('round-correct').textContent = state.roundCorrect;
+  document.getElementById('round-wrong').textContent = state.roundWrong;
+  document.getElementById('round-bonus').textContent = bonus > 0 ? `+${bonus}` : '0';
+  
+  const nextBtn = document.getElementById('next-round-btn');
+  
+  if (state.currentRound < ROUNDS.length - 1) {
+    document.getElementById('round-end-title').textContent = '🎉 Раунд завершён!';
+    nextBtn.textContent = '⭐ Бонусное задание';
+    nextBtn.onclick = showBonus;
+  } else {
+    document.getElementById('round-end-title').textContent = '🏆 Все раунды пройдены!';
+    nextBtn.textContent = '🎊 Посмотреть результат';
+    nextBtn.onclick = showFinal;
+  }
+  
+  switchScreen('round-end-screen');
+}
+
+// ===== БОНУСНЫЕ ЗАДАНИЯ =====
+function showBonus() {
+  const task = BONUS_TASKS[state.currentRound];
+  if (!task) {
+    // На всякий случай, если бонуса нет — переходим к следующему раунду
+    nextRound();
+    return;
+  }
+  document.getElementById('bonus-sentence').textContent = `«${task.sentence}»`;
+  document.getElementById('bonus-task').textContent = task.task;
+  document.getElementById('bonus-input').value = '';
+  switchScreen('bonus-screen');
+  setTimeout(() => document.getElementById('bonus-input').focus(), 300);
+}
+
+function checkBonus() {
+  const task = BONUS_TASKS[state.currentRound];
+  if (!task) { nextRound(); return; }
+  
+  const input = document.getElementById('bonus-input').value.toLowerCase().trim();
+  
+  if (!input) {
+    showFeedback('⚠️ Введи ответ!', 'wrong');
+    return;
+  }
+  
+  const userWords = input.split(/[,\s]+/).map(w => w.replace(/[^а-яё]/g, '')).filter(w => w);
+  const correctWords = task.answers.map(a => a.toLowerCase());
+  
+  const allFound = correctWords.every(cw => userWords.includes(cw));
+  const noExtra = userWords.every(uw => correctWords.includes(uw));
+  
+  if (allFound && noExtra && userWords.length === correctWords.length) {
+    state.score += 15;
+    showFeedback('⭐ Отлично! +15 кирпичей', 'correct');
+    setTimeout(() => nextRound(), 1200);
+  } else {
+    showFeedback(`❌ Правильно: ${task.answers.join(', ')}`, 'wrong');
+    setTimeout(() => nextRound(), 2200);
+  }
+}
+
+function nextRound() {
+  state.currentRound++;
+  state.currentWordIndex = 0;
+  state.roundCorrect = 0;
+  state.roundWrong = 0;
+  state.roundErrorsByBuilding = {};
+  state.isLocked = false;
+  
+  switchScreen('game-screen');
+  renderBuildings();
+  updateHUD();
+  loadWord();
+}
+
+// ===== КОНЕЦ ИГРЫ =====
+function gameOver() {
+  document.getElementById('final-icon').textContent = '💔';
+  document.getElementById('final-title').textContent = 'Город не достроен...';
+  document.getElementById('final-rank').textContent = 'Настоящий мастер учится на ошибках!';
+  document.getElementById('final-score').innerHTML = `Собрано кирпичей: <b>${state.score}</b><br>Попробуй ещё раз!`;
+  renderCityView();
+  switchScreen('final-screen');
+}
+
+function showFinal() {
+  let rank, icon;
+  if (state.score >= 380) { rank = '🏆 Великий Архитектор'; icon = '🏆'; }
+  else if (state.score >= 300) { rank = '🥈 Мастер-Строитель'; icon = '🥈'; }
+  else if (state.score >= 200) { rank = '🥉 Подмастерье'; icon = '🥉'; }
+  else { rank = '🔨 Ученик'; icon = '🔨'; }
+  
+  document.getElementById('final-icon').textContent = icon;
+  document.getElementById('final-title').textContent = 'Словоград построен!';
+  document.getElementById('final-rank').textContent = rank;
+  document.getElementById('final-score').innerHTML = `
+    Собрано кирпичей: <b>${state.score}</b><br>
+    Город ожил! По улицам идут жители (существительные), 
+    сверкают краски (прилагательные), всё движется (глаголы).
+  `;
+  
+  renderCityView();
+  switchScreen('final-screen');
+}
+
+function renderCityView() {
+  const city = document.getElementById('city-view');
+  city.innerHTML = '';
+  
+  PARTS_OF_SPEECH.forEach(p => {
+    const b = document.createElement('div');
+    const progress = state.buildingsProgress[p.id] || 0;
+    const built = progress >= 80;
+    b.className = `city-building ${p.class}`;
+    b.style.opacity = built ? '1' : '0.5';
+    b.innerHTML = `
+      <div class="city-building-icon">${p.icon}</div>
+      <div>${p.building}</div>
+    `;
+    city.appendChild(b);
+  });
+}
+</script>
+
+</body>
+</html>
